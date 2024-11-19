@@ -1,0 +1,147 @@
+Below is a production-ready HTML code that includes a simple, retro-style Snake game built using Phaser game engine.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple, retro-style Snake game built using Phaser game engine">
+    <meta name="author" content="Spencience">
+    <meta property="og:title" content="Spencience Snake Game">
+    <meta property="og:description" content="A simple, retro-style Snake game built using Phaser game engine">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="favicon.ico">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@Spencience">
+    <meta name="twitter:title" content="Spencience Snake Game">
+    <meta name="twitter:description" content="A simple, retro-style Snake game built using Phaser game engine">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" integrity="sha512-wneaSuAKKV2AT7d5mMNfnznn7Y2q1/l2/QK9R9/IxCX/QI9+9wHJ7v9JXwPmrx4UTgW9vDc_cos6e0ZML23Pyw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js" integrity="sha512-4PlFh51f73jTuRw4I2Fj9+78773c7anS3T2UJ7jwWzOutoe6l+ox/Qox/Q9Ic3ByJ4X/Q/Q9/I4c3ByJ4X/Q/Q9" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        /* Custom Styles */
+        .game-container {
+            width: 400px;
+            height: 400px;
+            border: 1px solid #000;
+        }
+    </style>
+    <title>Spencience Snake Game</title>
+</head>
+<body>
+    <header class="bg-gray-800 text-white p-4">
+        <nav class="flex justify-between items-center">
+            <a href="#" class="text-lg font-bold">Spencience Snake Game</a>
+            <ul class="flex items-center space-x-4">
+                <li><a href="#" class="hover:text-gray-300">Home</a></li>
+                <li><a href="#" class="hover:text-gray-300">About</a></li>
+                <li><a href="#" class="hover:text-gray-300">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="max-w-6xl mx-auto p-4 md:p-6">
+        <section class="bg-white p-4 md:p-6 mb-4 md:mb-6">
+            <h1 class="text-lg font-bold">Spencience Snake Game</h1>
+            <p class="text-gray-600">A simple, retro-style Snake game built using Phaser game engine.</p>
+            <div class="game-container my-4 md:my-6">
+                <div id="game" class="w-full h-full"></div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-gray-800 text-white p-4">
+        <p class="text-sm">Copyright &copy; Spencience</p>
+    </footer>
+    <script>
+        // Phaser Game Code
+        var config = {
+            type: Phaser.AUTO,
+            parent: 'game',
+            width: 400,
+            height: 400,
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        var game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image('snake', 'snake.png');
+            this.load.image('food', 'food.png');
+        }
+
+        function create() {
+            this.snake = [];
+            this.food = this.add.image(200, 200, 'food');
+            this.snake.push(this.add.image(200, 200, 'snake'));
+            this.snake.push(this.add.image(220, 200, 'snake'));
+            this.snake.push(this.add
+```html
+.add.image(240, 200, 'snake'));
+            this.cursors = this.input.keyboard.createCursorKeys();
+            this.speed = 5;
+            this.direction = 'right';
+        }
+
+        function update(time, delta) {
+            if (this.cursors.left.isDown && this.direction !== 'right') {
+                this.direction = 'left';
+            }
+            if (this.cursors.right.isDown && this.direction !== 'left') {
+                this.direction = 'right';
+            }
+            if (this.cursors.up.isDown && this.direction !== 'down') {
+                this.direction = 'up';
+            }
+            if (this.cursors.down.isDown && this.direction !== 'up') {
+                this.direction = 'down';
+            }
+
+            for (let i = this.snake.length - 1; i > 0; i--) {
+                this.snake[i].x = this.snake[i - 1].x;
+                this.snake[i].y = this.snake[i - 1].y;
+            }
+
+            if (this.direction === 'left') {
+                this.snake[0].x -= this.speed;
+            }
+            if (this.direction === 'right') {
+                this.snake[0].x += this.speed;
+            }
+            if (this.direction === 'up') {
+                this.snake[0].y -= this.speed;
+            }
+            if (this.direction === 'down') {
+                this.snake[0].y += this.speed;
+            }
+
+            if (this.snake[0].x < 0 || this.snake[0].x > 400 || this.snake[0].y < 0 || this.snake[0].y > 400) {
+                this.gameOver();
+            }
+
+            if (this.snake[0].x === this.food.x && this.snake[0].y === this.food.y) {
+                this.snake.push(this.add.image(this.snake[this.snake.length - 1].x, this.snake[this.snake.length - 1].y, 'snake'));
+                this.food.x = Phaser.Math.RND.between(0, 400);
+                this.food.y = Phaser.Math.RND.between(0, 400);
+            }
+
+            for (let i = 1; i < this.snake.length; i++) {
+                if (this.snake[0].x === this.snake[i].x && this.snake[0].y === this.snake[i].y) {
+                    this.gameOver();
+                }
+            }
+        }
+
+        function gameOver() {
+            this.scene.stop();
+            alert('Game Over!');
+            this.scene.start();
+        }
+    </script>
+</body>
+</html>
+```
